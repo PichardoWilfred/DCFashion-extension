@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "DC-Fashion-print",
+  "version": "1.0",
+  "author": "PichardoW",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "activeTab",
+    "declarativeContent"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icon_128.png"
+    }
+  },
+  "content_security_policy": {}
+}
