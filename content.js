@@ -37,8 +37,9 @@ const print_table = () => {
         };
         rows.push(item_information); // Push the row data to the array
     }
+    
     sold_items = JSON.parse(JSON.stringify( rows ));
-    // console.log(sold_items);
+
 }
 
 const fill_tables = () => {
