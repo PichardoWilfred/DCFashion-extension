@@ -1,11 +1,91 @@
 let row_state = [];
-let location_detector_listener = 0;
+let new_rows = [];
 let sold_items = [];
+
+let currentDate = "";
+let currentHour = "";
+
+let location_detector_listener = 0;
 
 // bill structure
 const bill_structure = `
-<div class="bill-container"><h1>DC Fashion</h1><p class="address">G6V7+8CJ, Av Manuelico Gonzalez, Villa González 51000</p><p class="phone">+1 (829) 297-0170</p><div class="date-hour"><p>Tipo</p><p id="type-document">Factura</p></div><div class="date-hour"><p id="bill-date">3 de Marzo 2023</p><p id="bill-hour">3:20 PM</p></div><table class="table table-sm table-striped" id="bill"><thead><tr><th class="product-name">Producto</th><th>Cantidad</th><th>Precio</th><th class="total">Total</th></tr></thead><tbody><tr><td class="product-name">Lentes</td><td>1</td><td>100</td><td class="total">100</td></tr><tr><td class="product-name">Blanco, Negro 5 (1/2), 6 (1/2)</td><td>1</td><td>3950</td><td class="total">3950</td></tr><tr><td class="product-name">RSX, Running System, Multicolor Size 8 (1/2)</td><td>4</td><td>5550</td><td class="total">22200</td></tr><hr><tr class="total-row"><td class="product-name"><b>TOTAL</b></td><td></td><td></td><td class="total">26250.00</td></tr></tbody></table></div>
+<div class="bill-container">
+<header>
+    <h1>DC Fashion</h1>
+    <p class="address">G6V7+8CJ, Av Manuelico Gonzalez, Villa González 51000</p>
+    <p class="phone">+1 (829) 297-0170</p>
+</header>
+<div class="sub-header">
+    <div class="bill-type">
+        <p>Tipo de Documento:</p>
+        <p id="type-document"></p>
+    </div>
+    <div class="date-hour">
+        <p id="bill-date"></p> <span style="margin-inline: 6px">|</span> <p id="bill-hour"></p>
+    </div>
+</div>
+<table class="table table-sm table-striped" id="bill">
+    <thead>
+        <tr>
+            <th class="product-name">Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th class="total">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="total-row">
+            <td class="product-name">
+                <b>MONTO TOTAL</b>
+            </td>
+            <td></td>
+            <td></td>
+            <td class="total" id="total-amount"></td>
+        </tr>
+    </tbody>
+</table>
+</div>
 `;
+
+function getCurrentTime() {
+    const currentDate = new Date();
+
+    let hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    // Convert to 12-hour format
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+
+    const formattedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+
+    return formattedTime;
+}
+
+// Example usage:
+// const formattedTime = getCurrentTime();
+// console.log(formattedTime);
+
+function getCurrentDate() {
+    const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+    const currentDate = new Date();
+
+    const dayOfWeek = daysOfWeek[currentDate.getDay()];
+    const dayOfMonth = currentDate.getDate();
+    const month = months[currentDate.getMonth()];
+    const year = currentDate.getFullYear();
+
+    const formattedDate = `${dayOfWeek}, ${dayOfMonth} de ${month} ${year}`;
+
+    return formattedDate;
+}
+
+// Example usage:
+// const formattedDate = getCurrentDate();
+// console.log(formattedDate);
 
 function addRow() {
     // Get the reference to the table body
@@ -38,6 +118,7 @@ const add_printing_function = () => {
     button_container.appendChild(printing_button);
 
     // fill products
+    // fill_tables();
 
     // Setting the default object as 'factura'
     const option = document.querySelector('option[value="Factura"]');
@@ -55,13 +136,17 @@ const add_printing_function = () => {
     const container_fluid = document.querySelector(".container-fluid");
     // 
     const invisible_row = document.createElement("div");
-    invisible_row.className += "row";
+    invisible_row.className += " row";
 
     container_fluid.appendChild(invisible_row);
+    // add the bill structure to the print desired element
+    invisible_row.innerHTML = bill_structure;
+
 }
 const print_table = () => {
     const table = document.querySelector("table");
     const rows = [];
+    
     for (let i = 1; i < table.rows.length; i++) { // Loop through each row in the table
         const columns = table.rows[i].cells; // Get the columns of the current row
         const item_information = { // Create an object to store the row data 
@@ -73,6 +158,50 @@ const print_table = () => {
         rows.push(item_information); // Push the row data to the array
     }
     sold_items = JSON.parse(JSON.stringify( rows ));
+    new_rows = [...table.rows].splice(1, table.rows.length);
+
+    // getting necessary data out of the rows.
+    new_rows.map((row, index) => {
+        row.removeChild(row.firstElementChild);
+    });
+
+    // row container
+    const row_container = document.querySelector(".col-sm-4");
+    const bill_table = document.querySelector("table#bill");
+    
+    const tbody = bill_table.querySelector("tbody");
+    
+    new_rows.map((table_row, index) => {
+        // tbody.appendChild(table_row);
+        tbody.insertBefore(table_row, tbody.firstChild);
+    });
+    
+    const tag_finder = (text, tagType = 'span') => {
+        let res = [];
+        let elems = [...document.getElementsByTagName(tagType)];
+        elems.forEach((elem) => {
+            if(elem.innerHTML.includes(text)) {
+                res.push(elem)
+            }
+        });
+        return res;
+    }
+
+    const table_total_amount = tag_finder('Total:', 'span')[1].nextSibling.value;
+    const table_type = tag_finder('Tipo:', 'span')[0].nextSibling.value;
+
+    const total_amount = document.querySelector("td#total-amount");
+    total_amount.innerHTML = table_total_amount;
+
+    const bill_type = document.querySelector("p#type-document");
+    bill_type.innerHTML = table_type;
+
+
+    const bill_date = document.querySelector("p#bill-date");
+    const bill_hour = document.querySelector("p#bill-hour");
+    // 
+    bill_date.innerHTML = getCurrentTime();
+    bill_hour.innerHTML = getCurrentDate();
 
 }
 
@@ -84,15 +213,14 @@ const fill_tables = () => {
 }
 
 const removeListeners = function() {
-    console.log("papo out");
+    // console.log("papo out");
 }
 
 //message listener for background
-// chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) { });
 // detect in which rout we are to made the corresponding changess
 const detect_location = (pathname) => {
     let url = new URL(window.location.href);
-    // console.log(url.pathname);
+
     if (url.pathname.endsWith(pathname)) {
         add_printing_function();
     }

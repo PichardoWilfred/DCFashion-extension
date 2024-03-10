@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIll structure</title>
+</head>
+<style>
+    .bill-container header {
+        display: flex; 
+        flex-direction: column; 
+        align-items: center;
+    }
+    .bill-container .sub-header {
+        display: flex; 
+        justify-content: space-between;
+    }
+    .bill-container .sub-header .date-hour {
+        display: flex; 
+        align-items: center;
+    }
+    .bill-container table tr:nth-last-child(2n) td {
+        padding-bottom: 12px;
+    }
+    td.product-name {
+        padding-right: 12px;
+    }
+    .bill-container header h1 {
+        margin-bottom: 8px;
+        margin-top: 28px;
+    }
+
+    .bill-container header .address {
+        margin-block: 6px;
+        text-align: center;
+    }
+
+    .bill-container header .phone {
+        margin-block: 6px;
+    }
+
+    /* Styles for sub-header */
+    .bill-container .sub-header .date-hour {
+        display: flex;
+    }
+
+    .bill-container .sub-header #type-document {
+        margin-left: 8px;
+    }
+
+    .bill-container .sub-header #bill-hour {
+        margin-left: 8px;
+    }
+
+    /* Styles for table */
+    .bill-container #bill {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .bill-container #bill thead th.product-name {
+        text-align: start;
+        padding-right: 18px;
+    }
+
+    .bill-container #bill thead th,
+    .bill-container #bill tbody td {
+        text-align: start;
+        padding-right: 10px;
+    }
+
+    .bill-container #bill tbody td.total {
+        text-align: start;
+    }
+
+    .bill-container #bill tbody tr.total-row {
+        border-top: 1px solid black;
+    }
+
+    .bill-container #bill tbody tr.total-row td.product-name {
+        padding-top: 12px;
+    }
+
+    .bill-container #bill tbody tr.total-row td {
+        padding-top: 12px;
+    }
+</style>
+<body>
+    <main>
+        <section>
+            <div class="bill-container">
+                <header>
+                    <h1>DC Fashion</h1>
+                    <p class="address">G6V7+8CJ, Av Manuelico Gonzalez, Villa González 51000</p>
+                    <p class="phone">+1 (829) 297-0170</p>
+                </header>
+                <div class="sub-header">
+                    <div class="date-hour">
+                        <p>Tipo de Documento:</p>
+                        <p id="type-document"></p>
+                    </div>
+                    <div class="date-hour">
+                        <p id="bill-date"></p>
+                        <p id="bill-hour"></p>
+                    </div>
+                </div>
+                <table class="table table-sm table-striped" id="bill">
+                    <thead>
+                        <tr>
+                            <th class="product-name">Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th class="total">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <tr>
+                            <td class="product-name">RSX, Running System, Multicolor Size 8 (1/2)</td>
+                            <td>4</td>
+                            <td>5550</td>
+                            <td class="total">22200</td>
+                        </tr> -->
+                        <tr class="total-row">
+                            <td class="product-name">
+                                <b>TOTAL</b>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td class="total" id="total-amount"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

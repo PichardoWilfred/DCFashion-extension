@@ -1,0 +1,91 @@
+.bill-container header {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+}
+.bill-container .sub-header {
+    display: flex; 
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.bill-container .sub-header :is(.bill-type, .date-hour ) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.bill-container .sub-header .bill-type {
+    margin-right: 120px;
+}
+.bill-container .sub-header .date-hour {
+    align-content: center;
+    margin-left: auto;
+    margin-bottom: 1rem;
+}
+
+.bill-container .sub-header .date-hour p {
+    align-content: center;
+    margin-left: auto;
+    margin-bottom: 0;
+}
+.bill-container table tr:nth-last-child(2n) td {
+    padding-bottom: 12px;
+}
+td.product-name {
+    padding-right: 12px;
+}
+.bill-container header h1 {
+    margin-bottom: 8px;
+    margin-top: 28px;
+}
+
+.bill-container header .address {
+    margin-top: 6px;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.bill-container header .phone {
+    margin-block: 8px;
+}
+
+
+.bill-container .sub-header #type-document {
+    margin-left: 8px;
+}
+
+.bill-container .sub-header #bill-hour {
+    /* margin-left: 8px; */
+}
+
+/* Styles for table */
+.bill-container #bill {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bill-container #bill thead th.product-name {
+    text-align: start;
+    padding-right: 18px;
+}
+
+.bill-container #bill thead th,
+.bill-container #bill tbody td {
+    text-align: start;
+    padding-right: 10px;
+}
+
+.bill-container #bill tbody td.total {
+    text-align: start;
+}
+
+.bill-container #bill tbody tr.total-row {
+    border-top: 1px solid black;
+}
+
+.bill-container #bill tbody tr.total-row td.product-name {
+    padding-top: 12px;
+}
+
+.bill-container #bill tbody tr.total-row td {
+    padding-top: 12px;
+}
