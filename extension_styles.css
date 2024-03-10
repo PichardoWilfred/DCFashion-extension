@@ -1,3 +1,7 @@
+.bill-container {
+    display: none;
+}
+
 .bill-container header {
     display: flex; 
     flex-direction: column; 

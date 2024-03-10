@@ -6,10 +6,117 @@ let currentDate = "";
 let currentHour = "";
 
 let location_detector_listener = 0;
+let content_javascript = 0;
+let select_bill_type = 0;
+
+let billCSS = `
+.bill-container {
+    display: none;
+}
+.bill-container header {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+}
+.bill-container .sub-header {
+    display: flex; 
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.bill-container .sub-header :is(.bill-type, .date-hour ) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    align-content: center;
+    
+}
+.bill-container .sub-header .bill-type {
+    margin-right: 120px;
+}
+.bill-container .sub-header .date-hour {
+    margin-left: auto;
+}
+
+.bill-container .sub-header .date-hour p {
+    align-content: center;
+    margin-left: auto;
+    margin-bottom: 1rem;
+}
+.bill-container table tr:nth-last-child(2n) td {
+    padding-bottom: 12px;
+}
+td.product-name {
+    padding-right: 12px;
+}
+.bill-container header h1 {
+    margin-bottom: 8px;
+    margin-top: 28px;
+}
+
+.bill-container header .address {
+    margin-top: 6px;
+    margin-bottom: 0px;
+    text-align: center;
+}
+
+.bill-container header .phone {
+    margin-block: 8px;
+}
+
+
+.bill-container .sub-header #type-document {
+    margin-left: 8px;
+}
+
+.bill-container .sub-header #bill-hour {
+    /* margin-left: 8px; */
+}
+
+/* Styles for table */
+.bill-container #bill {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.bill-container #bill thead th.product-name {
+    text-align: start;
+    padding-right: 18px;
+}
+
+.bill-container #bill thead th,
+.bill-container #bill tbody td {
+    text-align: start;
+    padding-right: 10px;
+}
+
+.bill-container #bill tbody td.total {
+    text-align: start;
+}
+
+.bill-container #bill tbody tr.total-row {
+    border-top: 1px solid black;
+}
+
+.bill-container #bill tbody tr.total-row td.product-name {
+    padding-top: 12px;
+}
+
+.bill-container #bill tbody tr.total-row td {
+    padding-top: 12px;
+}
+@media print {
+    @page {
+        margin: 0;
+    }
+    .bill-container {
+        display: block;
+    }
+}
+`;
 
 // bill structure
 const bill_structure = `
-<div class="bill-container">
+<div class="bill-container" id="printable-bill">
 <header>
     <h1>DC Fashion</h1>
     <p class="address">G6V7+8CJ, Av Manuelico Gonzalez, Villa González 51000</p>
@@ -21,7 +128,7 @@ const bill_structure = `
         <p id="type-document"></p>
     </div>
     <div class="date-hour">
-        <p id="bill-date"></p> <span style="margin-inline: 6px">|</span> <p id="bill-hour"></p>
+        <p id="bill-date"></p> <span style="margin-inline: 8px">|</span> <p id="bill-hour"></p>
     </div>
 </div>
 <table class="table table-sm table-striped" id="bill">
@@ -63,10 +170,6 @@ function getCurrentTime() {
     return formattedTime;
 }
 
-// Example usage:
-// const formattedTime = getCurrentTime();
-// console.log(formattedTime);
-
 function getCurrentDate() {
     const daysOfWeek = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     const months = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
@@ -83,9 +186,16 @@ function getCurrentDate() {
     return formattedDate;
 }
 
-// Example usage:
-// const formattedDate = getCurrentDate();
-// console.log(formattedDate);
+const tag_finder = (text, tagType = 'span') => {
+    let res = [];
+    let elems = [...document.getElementsByTagName(tagType)];
+    elems.forEach((elem) => {
+        if(elem.innerHTML.includes(text)) {
+            res.push(elem)
+        }
+    });
+    return res;
+}
 
 function addRow() {
     // Get the reference to the table body
@@ -121,9 +231,9 @@ const add_printing_function = () => {
     // fill_tables();
 
     // Setting the default object as 'factura'
-    const option = document.querySelector('option[value="Factura"]');
-    const select = option.parentElement;
-    select.value = "Factura";
+    // const option = document.querySelector('option[value="Factura"]');
+    // const select = option.parentElement;
+    // select.value = "Factura";
 
     // building the bill structure 
     const detail_container = document.querySelector(".col-sm-4");
@@ -133,8 +243,7 @@ const add_printing_function = () => {
     // billing event-listener
     printing_button.addEventListener("click", print_table); 
 
-    const container_fluid = document.querySelector(".container-fluid");
-    // 
+    const container_fluid = document.querySelector(".container-fluid"); 
     const invisible_row = document.createElement("div");
     invisible_row.className += " row";
 
@@ -142,6 +251,27 @@ const add_printing_function = () => {
     // add the bill structure to the print desired element
     invisible_row.innerHTML = bill_structure;
 
+    // SELECT THE better bill type
+    // select_bill_type = setTimeout(() => {
+        // const select_type = tag_finder('Tipo:', 'span')[0].nextSibling;
+        // select_type
+        // console.dir(select_type);
+        // select_type.click();
+
+        // const event = new MouseEvent('mousedown', {
+        //     view: window,
+        //     bubbles: true,
+        //     cancelable: true
+        // });
+        // console.log(select_type);
+        // select_type.dispatchEvent(event);
+    // }, 500);
+
+    // select_bill_type = setTimeout(() => {
+        // const select_option = tag_finder('Factura', 'option')[0];
+        // // console.log(select_option);
+        // select_option.click();
+    // }, 800);
 }
 const print_table = () => {
     const table = document.querySelector("table");
@@ -176,16 +306,6 @@ const print_table = () => {
         tbody.insertBefore(table_row, tbody.firstChild);
     });
     
-    const tag_finder = (text, tagType = 'span') => {
-        let res = [];
-        let elems = [...document.getElementsByTagName(tagType)];
-        elems.forEach((elem) => {
-            if(elem.innerHTML.includes(text)) {
-                res.push(elem)
-            }
-        });
-        return res;
-    }
 
     const table_total_amount = tag_finder('Total:', 'span')[1].nextSibling.value;
     const table_type = tag_finder('Tipo:', 'span')[0].nextSibling.value;
@@ -203,6 +323,17 @@ const print_table = () => {
     bill_date.innerHTML = getCurrentTime();
     bill_hour.innerHTML = getCurrentDate();
 
+    content_javascript = setTimeout(() => {
+        printJS({ 
+            printable: 'printable-bill', 
+            type: 'html', 
+            style: billCSS, 
+            maxWidth: 500, 
+            repeatTableHeader: false, 
+            scanStyles: false, 
+            header: ''
+        });
+    }, 0);
 }
 
 const fill_tables = () => {
@@ -213,7 +344,6 @@ const fill_tables = () => {
 }
 
 const removeListeners = function() {
-    // console.log("papo out");
 }
 
 //message listener for background

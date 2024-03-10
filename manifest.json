@@ -10,13 +10,14 @@
     "declarativeContent"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "scripts": "print.min.js"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": [ "content.js"],
-      "css" : ["extension_styles.css"]
+      "js": [ "content.js","print.min.js"],
+      "css" : ["extension_styles.css", "print.min (1).css"]
     }
   ],
   "action": {
