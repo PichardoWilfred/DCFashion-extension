@@ -252,26 +252,6 @@ const add_printing_function = () => {
     invisible_row.innerHTML = bill_structure;
 
     // SELECT THE better bill type
-    // select_bill_type = setTimeout(() => {
-        // const select_type = tag_finder('Tipo:', 'span')[0].nextSibling;
-        // select_type
-        // console.dir(select_type);
-        // select_type.click();
-
-        // const event = new MouseEvent('mousedown', {
-        //     view: window,
-        //     bubbles: true,
-        //     cancelable: true
-        // });
-        // console.log(select_type);
-        // select_type.dispatchEvent(event);
-    // }, 500);
-
-    // select_bill_type = setTimeout(() => {
-        // const select_option = tag_finder('Factura', 'option')[0];
-        // // console.log(select_option);
-        // select_option.click();
-    // }, 800);
 }
 const print_table = () => {
     const table = document.querySelector("table");
